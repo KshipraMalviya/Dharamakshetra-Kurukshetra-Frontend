@@ -208,6 +208,13 @@ footer a {
   top: 4vh;
 }
 
+.loading-container {
+  display: flex;
+  justify-content: space-around;
+  height: 30vh;
+  align-items: center;
+}
+
 @media (max-width: 768px) {
   .places {
     width: 80%;

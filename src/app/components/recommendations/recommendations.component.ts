@@ -5,11 +5,12 @@ import { SharedService } from '../../shared.service';
 import { SuggestionService } from '../../suggestion.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-recommendations',
   standalone: true,
-  imports: [RouterLink, FormsModule, CommonModule],
+  imports: [RouterLink, FormsModule, CommonModule, MatProgressSpinnerModule ],
   templateUrl: './recommendations.component.html',
   styleUrls: ['./recommendations.component.css'],
   encapsulation: ViewEncapsulation.None
@@ -22,6 +23,7 @@ export class RecommendationsComponent {
   suggestions$: Observable<string[]> | null = null;
   Recommendations: any[] = [];
   selectedIndex: number = -1;
+  isLoading = false;
 
   constructor(private service:SharedService, private suggestion: SuggestionService) {
     this.BackBtn = '/assets/images/backBtn.png';
@@ -32,16 +34,20 @@ export class RecommendationsComponent {
   onSearch() {
     console.log('Performing search for:', this.searchTerm);
     this.suggestions$ = null;
+    this.isLoading = true;
     let val = {destination: this.searchTerm};
     this.service.getRecommendations(val).subscribe((res: any) => {
       this.Recommendations = res as any[];
+      this.isLoading = false;
     });
   }
 
   updateSuggestions() {
+    this.isLoading = true;
     this.suggestions$ = this.suggestion.getSuggestions(this.searchTerm);
     if (this.searchTerm == '') {
       this.suggestions$ = null;
+      this.isLoading = false;
     }
   }
 
